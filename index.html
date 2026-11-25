@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IraPrep — The Sophisticated IRaMuTeQ Studio</title>
+    <title>IraPrep — Universal IRaMuTeQ Corpus Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
             --bg: #FAFAF9;
             --card-bg: #FFFFFF;
             --border: #F0EEEC;
+            --border-hover: #D4D4D8;
             --text-main: #18181B;
             --text-sub: #71717A;
             --text-muted: #A1A1AA;
@@ -23,6 +24,7 @@
             --primary-btn-hover: #3F3F46;
             --pill-active-bg: #18181B;
             --pill-active-text: #FFFFFF;
+            --success-color: #10B981;
         }
 
         * {
@@ -36,19 +38,19 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
-            padding: 30px 16px;
+            padding: 32px 16px 64px 16px;
             display: flex;
             justify-content: center;
         }
 
         .container {
             width: 100%;
-            max-width: 740px;
+            max-width: 760px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 30px;
         }
 
         .chic-badge {
@@ -59,32 +61,35 @@
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 999px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .brand-title {
-            font-size: 2.3rem;
+            font-size: 2.4rem;
             font-weight: 700;
             letter-spacing: -0.03em;
             color: var(--text-main);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .brand-subtitle {
-            font-size: 0.95rem;
+            font-size: 0.96rem;
             color: var(--text-sub);
+            max-width: 580px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
 
         .step-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 18px;
-            padding: 24px;
-            margin-bottom: 20px;
+            padding: 26px;
+            margin-bottom: 22px;
             box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
         .step-number {
@@ -97,30 +102,31 @@
         }
 
         .step-heading {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--text-main);
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .dropzone {
             border: 2px dashed #E4E4E7;
             border-radius: 14px;
-            padding: 36px 16px;
+            padding: 40px 18px;
             text-align: center;
             cursor: pointer;
             transition: border-color 0.2s, background-color 0.2s;
+            background: #FAFAFA;
         }
 
         .dropzone:hover, .dropzone.dragover {
             border-color: var(--text-main);
-            background-color: #F8FAFC;
+            background-color: #F4F4F5;
         }
 
         .dropzone p {
             font-size: 0.95rem;
             color: var(--text-sub);
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .dropzone input[type="file"] {
@@ -130,21 +136,41 @@
         .scan-box {
             background-color: #F8FAFC;
             border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 18px;
-            font-size: 0.88rem;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
             color: #334155;
-            line-height: 1.5;
+            line-height: 1.55;
         }
 
         .scan-title {
             font-weight: 600;
             color: #0F172A;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .tags-cluster {
+            display: flex;
+            flex-wrap: wrap;
             gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 16px;
+            background: #EDF2F7;
+            color: #2D3748;
+            font-size: 0.78rem;
+            font-weight: 500;
         }
 
         .pill-grid {
@@ -158,7 +184,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 20px;
             border: 1px solid #E2E8F0;
             background: #FFFFFF;
@@ -182,7 +208,7 @@
 
         .pill .count {
             font-size: 0.72rem;
-            opacity: 0.75;
+            opacity: 0.8;
             background: rgba(0,0,0,0.06);
             padding: 1px 6px;
             border-radius: 10px;
@@ -194,32 +220,47 @@
         .preset-badge {
             cursor: pointer;
             border: 1px solid #E2E8F0;
-            padding: 12px 14px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            font-size: 0.88rem;
+            padding: 14px 16px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
             background: #FFFFFF;
             display: block;
-            transition: all 0.15s;
+            transition: all 0.15s ease;
         }
 
-        .preset-badge:hover, .preset-badge.selected {
-            border-color: #18181B;
-            background: #F8FAFC;
+        .preset-badge:hover {
+            border-color: #94A3B8;
+            background: #FAFAFA;
         }
 
         .preset-badge.selected {
-            border-width: 2px;
-            box-shadow: 0 2px 8px -2px rgba(0,0,0,0.06);
+            border: 2px solid #18181B;
+            background: #F8FAFC;
+            box-shadow: 0 4px 12px -2px rgba(0,0,0,0.05);
+        }
+
+        .preset-rec-tag {
+            display: inline-block;
+            background: #DEF7EC;
+            color: #03543F;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 8px;
+            vertical-align: middle;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.86rem;
             font-weight: 600;
             color: var(--text-main);
             margin-bottom: 6px;
@@ -227,7 +268,7 @@
 
         select, input[type="text"] {
             width: 100%;
-            padding: 10px 14px;
+            padding: 11px 14px;
             font-size: 0.9rem;
             border: 1px solid #E4E4E7;
             border-radius: 10px;
@@ -235,6 +276,7 @@
             color: var(--text-main);
             background: #FFFFFF;
             outline: none;
+            transition: border-color 0.15s;
         }
 
         select:focus, input[type="text"]:focus {
@@ -328,14 +370,16 @@
 
         .preview-box {
             background: #F4F4F5;
-            border-radius: 10px;
-            padding: 14px;
-            font-family: monospace;
+            border-radius: 12px;
+            padding: 16px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             font-size: 0.82rem;
             white-space: pre-wrap;
-            max-height: 240px;
+            max-height: 250px;
             overflow-y: auto;
             margin-top: 14px;
+            line-height: 1.5;
+            border: 1px solid #E4E4E7;
         }
     </style>
 </head>
@@ -343,18 +387,18 @@
 
 <div class="container">
     <header>
-        <span class="chic-badge">100% In-Browser • Zero Cloud Uploads • Private</span>
+        <span class="chic-badge">100% Client-Side • Zero Cloud Storage • Private</span>
         <h1 class="brand-title">IraPrep</h1>
-        <p class="brand-subtitle">Smart, publication-ready corpus formatting for IRaMuTeQ.</p>
+        <p class="brand-subtitle">Universal, publication-ready corpus formatting for IRaMuTeQ. Built for interviews, academic papers, reports, focus groups, and tabular data.</p>
     </header>
 
     <!-- STEP 1: UPLOAD -->
     <div class="step-card">
         <div class="step-number">Step 01</div>
-        <div class="step-heading">Choose your document</div>
+        <div class="step-heading">Upload Your Research Document</div>
         <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-            <p id="file-name-display">Click to upload Word (.docx), Excel (.xlsx), CSV, or Text</p>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <p id="file-name-display">Click or drag & drop: Word (.docx), Excel (.xlsx), CSV, or Text (.txt)</p>
             <input type="file" id="file-input" accept=".docx,.xlsx,.xls,.csv,.txt">
         </div>
     </div>
@@ -362,11 +406,12 @@
     <!-- STEP 2: CONFIGURE -->
     <div class="step-card hidden" id="step-2">
         <div class="step-number">Step 02</div>
-        <div class="step-heading">Smart Scan & Sectioning Setup</div>
+        <div class="step-heading">Document Intelligence & Sectioning</div>
 
         <div class="scan-box" id="scan-summary-box">
-            <div class="scan-title">✨ Document Intelligence</div>
+            <div class="scan-title">✨ Document Intelligence Analysis</div>
             <div id="scan-summary-text">Analyzing file structure...</div>
+            <div class="tags-cluster" id="detected-tags-container"></div>
         </div>
 
         <!-- SPREADSHEET CONTROLS -->
@@ -374,7 +419,7 @@
             <div class="form-group">
                 <label for="text-column">Speech / Narrative Column (to analyze):</label>
                 <select id="text-column"></select>
-                <div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">Tip: Pick full sentences or quotes for rich Reinert cluster results.</div>
+                <div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">Select the column with free-form qualitative text, tweets, or interview responses.</div>
             </div>
 
             <div class="form-group">
@@ -387,27 +432,29 @@
         <!-- DOCUMENT & TRANSCRIPT CONTROLS -->
         <div id="document-options" class="hidden">
             <div class="form-group">
-                <label>How should sections be grouped?</label>
+                <label>Choose how to section this document into IRaMuTeQ units (UCIs):</label>
                 <div id="section-strategy-presets"></div>
             </div>
         </div>
 
-        <!-- GLOBAL METADATA DYNAMIC BUILDER -->
-        <div class="form-group" style="margin-top: 20px;">
-            <label>Additional Global Variables (Optional):</label>
+        <!-- GLOBAL METADATA BUILDER -->
+        <div class="form-group" style="margin-top: 22px;">
+            <label>Additional Illustrative Variables (Optional):</label>
             <div id="metadata-container">
                 <div class="meta-row">
-                    <input type="text" placeholder="Key (e.g. date)" value="date" class="meta-key">
-                    <input type="text" placeholder="Value (e.g. 2025_04)" value="2025_04" class="meta-val">
+                    <input type="text" placeholder="Key (e.g. corpus)" value="corpus" class="meta-key">
+                    <input type="text" placeholder="Value (e.g. study_2026)" value="study_2026" class="meta-val">
                     <button type="button" class="btn-icon" onclick="removeRow(this)">✕</button>
                 </div>
             </div>
             <button type="button" class="btn-text" onclick="addMetadataRow()">+ Add Another Variable</button>
         </div>
 
+        <!-- COMPOUND WORDS BINDING -->
         <div class="form-group">
-            <label for="compounds">Compound Words to bind with <code>_</code> (comma-separated):</label>
-            <input type="text" id="compounds" value="mental health, harm reduction, climate finance, artificial intelligence, cheat code">
+            <label for="compounds">Compound Expressions to bind with <code>_</code> (comma-separated):</label>
+            <input type="text" id="compounds" value="mental health, artificial intelligence, polycrisis, framing theory, machine learning, climate change, social media">
+            <div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">Multi-word terms will be united into single tokens (e.g., <code>framing_theory</code>) for Reinert cluster analysis.</div>
         </div>
 
         <button class="btn-primary" onclick="generateCorpus()">Generate IRaMuTeQ Corpus ✨</button>
@@ -416,12 +463,12 @@
     <!-- STEP 3: EXPORT -->
     <div class="step-card hidden" id="step-3">
         <div class="step-number">Step 03</div>
-        <div class="step-heading">Ready for IRaMuTeQ</div>
+        <div class="step-heading">IRaMuTeQ Corpus Ready</div>
 
         <div class="metric-container">
             <div class="metric-item">
                 <div class="metric-val" id="metric-units">0</div>
-                <div class="metric-lbl">Total Units</div>
+                <div class="metric-lbl">Total Units (UCIs)</div>
             </div>
             <div class="metric-item">
                 <div class="metric-val" id="metric-words">0</div>
@@ -429,13 +476,13 @@
             </div>
             <div class="metric-item">
                 <div class="metric-val" id="metric-avg">0</div>
-                <div class="metric-lbl">Avg Words / Unit</div>
+                <div class="metric-lbl">Avg Words / UCI</div>
             </div>
         </div>
 
         <div class="preview-box" id="preview-text"></div>
 
-        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;" id="download-buttons-container">
+        <div style="margin-top: 22px; display: flex; flex-direction: column; gap: 10px;" id="download-buttons-container">
             <button class="btn-primary" id="btn-download-all" onclick="downloadAll()">📥 Download corpus_iramuteq.txt</button>
         </div>
     </div>
@@ -447,25 +494,41 @@
     let currentFileName = "";
     let finalCorpora = {};
     let selectedMetaColumns = new Set();
-    let chosenSectionStrategy = "threads";
+    let chosenSectionStrategy = "auto";
+    let detectedAcademicSections = [];
+    let detectedSpeakers = [];
     let detectedDividersCount = 0;
+
+    // Academic & Report Section Heading Regex (e.g. Abstract, 1. Introduction, 2. Dataset, 3. Methodology, 4. Findings...)
+    const academicSectionRegex = /^(?:(?:[0-9]+(?:\.[0-9]+)*\b\s*[\.\-]?\s*)|(?:Abstract|Introduction|Methodology|Methods|Dataset|Data\s*and\s*Methods|Findings|Results|Discussion|Conclusion|Limitations|References|Bibliography|Appendix)\b)/i;
+
+    // Dialogue Speaker Turns Regex (e.g. Interviewer:, Participant 1:, Speaker A:, P1:, INT:, RES:, Q:, A:)
+    const speakerTurnRegex = /(?:^|\n)[ \t]*(?:\*\*|\[)?(?!Score|Author|Date|Category|Discussion|Word\s*Count|Student\s*ID|Instructor|Course|Overview|Post\s*Body|Figure|Table|Box|Note)(Interviewer|Interviewee|Moderator|Participant(?:\s*\d+)?|Speaker(?:\s*\d+)?|Person(?:\s*\d+)?|P\d+|INT|RES|PART|Q|A|[A-Z][a-zA-Z0-9\s]{1,18})(?:\*\*|\])?\s*[:\-]/i;
 
     function sanitizeVar(str) {
         if (!str) return "unknown";
         return str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase().replace(/[^a-z0-9_]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "") || "unknown";
+            .toLowerCase().replace(/[^a-z0-9_]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "").slice(0, 32) || "unknown";
     }
 
     function cleanText(text, compounds) {
         if (!text) return "";
         let t = text.toString();
+        // Remove URLs
         t = t.replace(/https?:\/\/\S+/g, " ");
-        t = t.replace(/\s*\(\d+\)/g, ""); // strip counts e.g. (1)
+        // Strip duplicate numbering references e.g. (1), (2)
+        t = t.replace(/\s*\(\d+\)/g, "");
+        // Normalize degrees & symbols
         t = t.replace(/\b(\d+)\s*°\s*([cCfF])\b/g, "$1_degrees_$2");
-        t = t.replace(/°/g, " degrees ").replace(/&/g, " and ").replace(/\$/g, " usd ");
-        t = t.replace(/[“”«»]/g, '"').replace(/[‘’`´]/g, "'");
+        t = t.replace(/°/g, " degrees ").replace(/&/g, " and ").replace(/\$/g, " usd ").replace(/%/g, " percent ");
+        // Normalize quotes & dashes
+        t = t.replace(/[“”«»]/g, '"').replace(/[‘’`´]/g, "'").replace(/[—–]/g, " - ");
+        // Remove emojis and rogue symbols
         t = t.replace(/[\u{10000}-\u{10FFFF}]/gu, " ").replace(/[\u2600-\u27BF]/g, " ");
-        t = t.replace(/\*/g, ""); // strip rogue asterisks
+        // Strip rogue asterisks so they don't break IRaMuTeQ header syntax
+        t = t.replace(/\*/g, "");
+
+        // Bind compound expressions with underscores
         if (compounds && compounds.length) {
             compounds.forEach(c => {
                 let parts = c.trim().split(/[\s\-_]+/);
@@ -475,7 +538,9 @@
                 }
             });
         }
+        // Ensure space after punctuation
         t = t.replace(/([.,?!;:~])(?=[^\s\d])/g, "$1 ");
+        // Consolidate whitespace
         t = t.replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n\n");
         return t.trim();
     }
@@ -546,7 +611,7 @@
         cols.forEach(c => {
             let uniqueVals = new Set();
             let totalLen = 0;
-            let sampleRows = parsedData.slice(0, 150);
+            let sampleRows = parsedData.slice(0, 200);
             sampleRows.forEach(r => {
                 let v = r[c] ? r[c].toString().trim() : "";
                 if (v) uniqueVals.add(v);
@@ -558,7 +623,7 @@
             };
         });
 
-        let preferredCols = cols.filter(c => ["full_text", "text", "body", "speech", "transcript", "content"].includes(c.toLowerCase()));
+        let preferredCols = cols.filter(c => ["full_text", "text", "body", "speech", "transcript", "content", "message", "narrative"].includes(c.toLowerCase()));
         let bestTextCol = preferredCols.length ? preferredCols[0] : cols.reduce((a, b) => colStats[a].avgLen > colStats[b].avgLen ? a : b);
 
         const select = document.getElementById('text-column');
@@ -595,10 +660,11 @@
         });
 
         document.getElementById('scan-summary-text').innerHTML = `
-            Detected <b>${rowCount.toLocaleString()} entries</b> across <b>${cols.length} columns</b>.<br>
-            • Text body set to: <b>${bestTextCol}</b><br>
-            • Auto-selected <b>${selectedMetaColumns.size} categorical metadata variables</b>.
+            Analyzed tabular dataset <b>${currentFileName}</b>: <b>${rowCount.toLocaleString()} records</b> across <b>${cols.length} variables</b>.<br>
+            • Free-text discourse body set to: <b>${bestTextCol}</b><br>
+            • Pre-selected <b>${selectedMetaColumns.size} illustrative variables</b> for cross-tabulation in IRaMuTeQ.
         `;
+        document.getElementById('detected-tags-container').innerHTML = cols.map(c => `<span class="tag-pill">${c}</span>`).join('');
     }
 
     function setupDocUI() {
@@ -606,85 +672,140 @@
         document.getElementById('spreadsheet-options').classList.add('hidden');
         document.getElementById('document-options').classList.remove('hidden');
 
-        // Look for horizontal rules, Post/Thread dividers, or line-leading dialogue tags
+        const paragraphs = parsedData.split(/\n+/).map(p => p.trim()).filter(Boolean);
+        const totalWords = parsedData.split(/\s+/).length;
+
+        // 1. Scan for Academic / Report Headings
+        detectedAcademicSections = [];
+        paragraphs.forEach((p, idx) => {
+            let firstLine = p.split('\n')[0].trim();
+            if (academicSectionRegex.test(firstLine) && firstLine.split(/\s+/).length <= 12) {
+                detectedAcademicSections.push({index: idx, title: firstLine});
+            }
+        });
+
+        // 2. Scan for Dialogue Speaker Turns
+        const speakerCounts = {};
+        const globalSpeakerRegex = new RegExp(speakerTurnRegex.source, 'gmi');
+        let match;
+        while ((match = globalSpeakerRegex.exec(parsedData)) !== null) {
+            let spk = match[1].trim();
+            speakerCounts[spk] = (speakerCounts[spk] || 0) + 1;
+        }
+        detectedSpeakers = Object.entries(speakerCounts);
+        let totalSpeakerTurns = detectedSpeakers.reduce((acc, curr) => acc + curr[1], 0);
+
+        // 3. Scan for Forum / Thread Dividers
         const dividerMatches = parsedData.match(/^[—–\-]{5,}|={5,}|\*{5,}|Post\s+\d+\s*:/gm) || [];
         detectedDividersCount = dividerMatches.length;
 
-        // Accurate speaker regex: ONLY at start of a line, strictly excluding metadata keywords (Score, Author, Date)
-        const lineSpeakerMatches = parsedData.match(/^[ \t]*(?!Score|Author|Date|Category|Discussion|Post\s*Body|Overview|Curated)(?:Participant|Speaker|Interviewer|Person|[A-Z][a-zA-Z\s]{1,15})\s*:/gm) || [];
-        const headingMatches = parsedData.match(/^#{1,4}\s+.+|^[A-Z\s]{5,}:/gm) || [];
-        const filenameTags = currentFileName.replace(/\.[^/.]+$/, "").split(/[\s\-_]+/).filter(Boolean);
-
+        // Build Presets List
         const container = document.getElementById('section-strategy-presets');
         container.innerHTML = "";
 
-        // Preset 1: Thread / Divider-based (Ideal for Reading Decks, Forums, Multi-Post documents)
-        if (detectedDividersCount > 2) {
-            addPresetOption(
-                container, 
-                "threads", 
-                `🧵 Smart Threads & Posts (~${detectedDividersCount} sections detected — Recommended)`, 
-                `Keeps each complete conversation thread together (Post + Comments) and extracts inline metadata automatically.`
-            );
-            chosenSectionStrategy = "threads";
-        }
-
-        // Preset 2: Dialogue turns (for qualitative interviews)
-        if (lineSpeakerMatches.length > 2) {
-            addPresetOption(
-                container, 
-                "speaker", 
-                `🗣️ Dialogue Speaker Turns (${lineSpeakerMatches.length} turns detected)`, 
-                `Splits strictly on speaking turns at line starts (e.g. 'Participant:', 'Interviewer:').`
-            );
-            if (detectedDividersCount <= 2) chosenSectionStrategy = "speaker";
-        }
-
-        // Preset 3: Headings / Structural Divisions
-        if (headingMatches.length > 2) {
-            addPresetOption(
-                container, 
-                "heading", 
-                `🔖 Section Headings (${headingMatches.length} chapters/titles detected)`, 
-                `Splits on major thematic sections.`
-            );
-            if (detectedDividersCount <= 2 && lineSpeakerMatches.length <= 2) chosenSectionStrategy = "heading";
-        }
-
-        // Preset 4: Entire document as single UCI
+        // Strategy A: Academic Paper Sections
+        let isAcademicStrong = detectedAcademicSections.length >= 3;
         addPresetOption(
-            container, 
-            "whole", 
-            `📄 Entire Document as 1 Section`, 
-            `Keeps the entire file as one continuous unit (best for individual participant transcripts).`
+            container,
+            "academic",
+            `📚 Academic Paper / Report Sections (${detectedAcademicSections.length} sections detected)`,
+            `Splits cleanly by chapter/section headings (Abstract, Introduction, Dataset, Methodology, Findings, Conclusion, etc.).`,
+            isAcademicStrong
         );
 
-        let summaryHtml = `Analyzed <b>${currentFileName}</b> (~${parsedData.split(/\s+/).length.toLocaleString()} words).<br>`;
-        if (detectedDividersCount > 2) {
-            summaryHtml += `• Found <b>${detectedDividersCount} conversation thread dividers</b>. Smart sectioning will preserve posts and discussion together.<br>`;
+        // Strategy B: Dialogue Speaker Turns
+        let isSpeakerStrong = totalSpeakerTurns >= 3 && !isAcademicStrong;
+        addPresetOption(
+            container,
+            "speaker",
+            `🗣️ Interview Dialogue Turns (${totalSpeakerTurns} turns across ${detectedSpeakers.length} speakers)`,
+            `Extracts each dialogue exchange as an individual UCI (e.g. *speaker_interviewer, *speaker_participant_1).`,
+            isSpeakerStrong
+        );
+
+        // Strategy C: Q&A Pairs (Interviewer Question + Participant Answer)
+        if (totalSpeakerTurns >= 4) {
+            addPresetOption(
+                container,
+                "qa_pairs",
+                `💬 Q&A Exchanges (Interviewer + Participant Pairs)`,
+                `Groups each interview question together with the answer into a unified, rich communicative unit.`,
+                false
+            );
         }
-        if (filenameTags.length > 1) {
-            summaryHtml += `• Filename tags: <code>${filenameTags.map(t => '*' + sanitizeVar(t)).join(' ')}</code>`;
-            const metaContainer = document.getElementById('metadata-container');
-            metaContainer.innerHTML = "";
-            filenameTags.forEach((t, i) => {
-                const div = document.createElement('div');
-                div.className = "meta-row";
-                div.innerHTML = `
-                    <input type="text" value="tag_${i+1}" class="meta-key">
-                    <input type="text" value="${sanitizeVar(t)}" class="meta-val">
-                    <button type="button" class="btn-icon" onclick="removeRow(this)">✕</button>
-                `;
-                metaContainer.appendChild(div);
-            });
+
+        // Strategy D: Forum / Reading Deck Threads
+        let isThreadStrong = detectedDividersCount >= 3 && !isAcademicStrong;
+        addPresetOption(
+            container,
+            "threads",
+            `🧵 Discussion Threads & Posts (~${detectedDividersCount} threads detected)`,
+            `Keeps each complete conversation thread together (Post + Discussion) and auto-extracts inline metadata (*author, *score, *date).`,
+            isThreadStrong
+        );
+
+        // Strategy E: Natural Paragraphs / Thematic Blocks
+        addPresetOption(
+            container,
+            "paragraphs",
+            `¶ Thematic Paragraphs (~${Math.min(paragraphs.length, 120)} units)`,
+            `Splits by natural paragraph breaks. Ideal for qualitative field notes, open essays, or continuous reflective prose.`,
+            false
+        );
+
+        // Strategy F: Entire Document as 1 Unit
+        addPresetOption(
+            container,
+            "whole",
+            `📄 Entire Document as 1 Unit`,
+            `Preserves the whole file as a single large corpus unit.`,
+            false
+        );
+
+        // Set default choice
+        if (isAcademicStrong) chosenSectionStrategy = "academic";
+        else if (isSpeakerStrong) chosenSectionStrategy = "speaker";
+        else if (isThreadStrong) chosenSectionStrategy = "threads";
+        else chosenSectionStrategy = "paragraphs";
+
+        // Update selected preset badge
+        container.querySelectorAll('.preset-badge').forEach(b => {
+            if (b.dataset.val === chosenSectionStrategy) b.classList.add('selected');
+        });
+
+        // Document Summary Display
+        let summaryHtml = `Analyzed <b>${currentFileName}</b> (~<b>${totalWords.toLocaleString()} words</b>).<br>`;
+        const tagsContainer = document.getElementById('detected-tags-container');
+        tagsContainer.innerHTML = "";
+
+        if (detectedAcademicSections.length >= 3) {
+            summaryHtml += `• Recognized structured <b>Academic Report / Paper</b> layout with <b>${detectedAcademicSections.length} section headings</b>.<br>`;
+            tagsContainer.innerHTML = detectedAcademicSections.slice(0, 10).map(s => `<span class="tag-pill">§ ${s.title.slice(0, 24)}</span>`).join('');
+            if (detectedAcademicSections.length > 10) tagsContainer.innerHTML += `<span class="tag-pill">+${detectedAcademicSections.length - 10} more</span>`;
+        } else if (totalSpeakerTurns >= 3) {
+            summaryHtml += `• Recognized <b>Interview / Dialogue Transcript</b> with <b>${totalSpeakerTurns} dialogue turns</b> across <b>${detectedSpeakers.length} speakers</b>.<br>`;
+            tagsContainer.innerHTML = detectedSpeakers.map(([spk, count]) => `<span class="tag-pill">🗣️ ${spk} (${count})</span>`).join('');
+        } else if (detectedDividersCount >= 3) {
+            summaryHtml += `• Found <b>${detectedDividersCount} thread dividers</b>. Smart sectioning will preserve posts and discussion together.<br>`;
+            tagsContainer.innerHTML = `<span class="tag-pill">Thread Dividers: ${detectedDividersCount}</span><span class="tag-pill">Metadata Parser: Active</span>`;
+        } else {
+            summaryHtml += `• Continuous qualitative text detected with <b>${paragraphs.length} paragraphs</b>.<br>`;
+            tagsContainer.innerHTML = `<span class="tag-pill">${paragraphs.length} Paragraphs</span><span class="tag-pill">Ready for Paragraph Splitting</span>`;
         }
         document.getElementById('scan-summary-text').innerHTML = summaryHtml;
     }
 
-    function addPresetOption(container, val, title, desc) {
+    function addPresetOption(container, val, title, desc, isRecommended) {
         const div = document.createElement('div');
-        div.className = `preset-badge ${chosenSectionStrategy === val ? 'selected' : ''}`;
-        div.innerHTML = `<div><b>${title}</b></div><div style="font-size:0.75rem; color:#64748B; margin-top:2px;">${desc}</div>`;
+        div.className = `preset-badge`;
+        div.dataset.val = val;
+        div.innerHTML = `
+            <div>
+                <b>${title}</b>
+                ${isRecommended ? '<span class="preset-rec-tag">Recommended</span>' : ''}
+            </div>
+            <div style="font-size:0.78rem; color:#64748B; margin-top:3px;">${desc}</div>
+        `;
         div.onclick = () => {
             chosenSectionStrategy = val;
             container.querySelectorAll('.preset-badge').forEach(b => b.classList.remove('selected'));
@@ -733,9 +854,81 @@
                 ucis.push({meta, text: clean});
             });
         } else {
-            // Intelligent Document Parser
-            if (chosenSectionStrategy === 'threads') {
-                // Split by thread dividers or Post indicators
+            // Document & Transcript Parsing
+            if (chosenSectionStrategy === 'academic') {
+                const paras = parsedData.split(/\n+/).map(p => p.trim()).filter(Boolean);
+                let curTitle = "title_overview";
+                let curBody = [];
+
+                paras.forEach(p => {
+                    let firstLine = p.split('\n')[0].trim();
+                    let isHead = academicSectionRegex.test(firstLine) && firstLine.split(/\s+/).length <= 12;
+
+                    if (isHead) {
+                        if (curBody.length) {
+                            let clean = cleanText(curBody.join('\n\n'), compounds);
+                            if (clean && clean.split(/\s+/).length >= 15) {
+                                let meta = {...globalMeta, section: sanitizeVar(curTitle)};
+                                ucis.push({meta, text: clean});
+                            }
+                            curBody = [];
+                        }
+                        curTitle = firstLine.slice(0, 32);
+                        let rest = p.split('\n').slice(1).join('\n').trim();
+                        if (rest) curBody.append ? curBody.append(rest) : curBody.push(rest);
+                    } else {
+                        curBody.push(p);
+                    }
+                });
+
+                if (curBody.length) {
+                    let clean = cleanText(curBody.join('\n\n'), compounds);
+                    if (clean && clean.split(/\s+/).length >= 15) {
+                        let meta = {...globalMeta, section: sanitizeVar(curTitle)};
+                        ucis.push({meta, text: clean});
+                    }
+                }
+
+            } else if (chosenSectionStrategy === 'speaker') {
+                const globalSpeakerRegex = new RegExp(
+                    '(?:^|\\n)[ \\t]*(?:\\*\\*|\\[)?(?!Score|Author|Date|Category|Discussion|Word\\s*Count|Student\\s*ID|Instructor|Course|Overview|Post\\s*Body|Figure|Table|Box|Note)(Interviewer|Interviewee|Moderator|Participant(?:\\s*\\d+)?|Speaker(?:\\s*\\d+)?|Person(?:\\s*\\d+)?|P\\d+|INT|RES|PART|Q|A|[A-Z][a-zA-Z0-9\\s]{1,18})(?:\\*\\*|\\])?\\s*[:\\-]',
+                    'gi'
+                );
+
+                const splits = parsedData.split(globalSpeakerRegex);
+                for (let i = 1; i < splits.length; i += 2) {
+                    let spkTag = splits[i] || `speaker_${(i+1)/2}`;
+                    let spkBody = splits[i+1] || "";
+                    let clean = cleanText(spkBody, compounds);
+                    if (clean && clean.split(/\s+/).length >= 3) {
+                        let meta = {...globalMeta, speaker: sanitizeVar(spkTag)};
+                        ucis.push({meta, text: clean});
+                    }
+                }
+
+            } else if (chosenSectionStrategy === 'qa_pairs') {
+                const globalSpeakerRegex = new RegExp(
+                    '(?:^|\\n)[ \\t]*(?:\\*\\*|\\[)?(?!Score|Author|Date|Category|Discussion|Word\\s*Count|Student\\s*ID|Instructor|Course|Overview|Post\\s*Body|Figure|Table|Box|Note)(Interviewer|Interviewee|Moderator|Participant(?:\\s*\\d+)?|Speaker(?:\\s*\\d+)?|Person(?:\\s*\\d+)?|P\\d+|INT|RES|PART|Q|A|[A-Z][a-zA-Z0-9\\s]{1,18})(?:\\*\\*|\\])?\\s*[:\\-]',
+                    'gi'
+                );
+
+                const splits = parsedData.split(globalSpeakerRegex);
+                let turnIdx = 1;
+                for (let i = 1; i < splits.length; i += 4) {
+                    let spk1 = splits[i] || "interviewer";
+                    let body1 = splits[i+1] || "";
+                    let spk2 = splits[i+2] || "participant";
+                    let body2 = splits[i+3] || "";
+
+                    let combined = `${spk1}: ${body1}\n\n${spk2}: ${body2}`;
+                    let clean = cleanText(combined, compounds);
+                    if (clean && clean.split(/\s+/).length >= 5) {
+                        let meta = {...globalMeta, speaker: sanitizeVar(spk2), exchange: `turn_${turnIdx++}`};
+                        ucis.push({meta, text: clean});
+                    }
+                }
+
+            } else if (chosenSectionStrategy === 'threads') {
                 const rawBlocks = parsedData.split(/(?:^[—–\-]{5,}|^={5,}|^\*{5,}|^Post\s+\d+\s*:)/gm);
                 
                 rawBlocks.forEach((block, idx) => {
@@ -745,12 +938,10 @@
                     let threadMeta = {...globalMeta};
                     let contentLines = [];
 
-                    // Scan for inline pipe metadata lines e.g. Score: 653 pts | Author: pizzaananas77
                     let lines = b.split('\n');
                     lines.forEach(l => {
                         let lTrim = l.trim();
                         if (lTrim.includes('|') && lTrim.includes(':')) {
-                            // Extract metadata pairs
                             let parts = lTrim.split('|');
                             parts.forEach(p => {
                                 if (p.includes(':')) {
@@ -775,29 +966,36 @@
                     }
                 });
 
-            } else if (chosenSectionStrategy === 'speaker') {
-                // Strict line-leading dialogue tags
-                const turnRegex = /(?:^|\n)[ \t]*(?!Score|Author|Date|Category|Discussion|Post\s*Body|Overview)(?:(Participant|Speaker|Interviewer|Person|[A-Z][a-zA-Z\s]{1,15})\s*:)/gm;
-                const splits = parsedData.split(turnRegex);
-                
-                for (let i = 1; i < splits.length; i += 2) {
-                    let spkTag = splits[i] || `speaker_${(i+1)/2}`;
-                    let spkBody = splits[i+1] || "";
-                    let clean = cleanText(spkBody, compounds);
+            } else if (chosenSectionStrategy === 'paragraphs') {
+                const paras = parsedData.split(/\n\s*\n+/).map(p => p.trim()).filter(Boolean);
+                let currentChunk = [];
+                let chunkWords = 0;
+                let chunkIdx = 1;
+
+                paras.forEach(p => {
+                    let words = p.split(/\s+/).length;
+                    currentChunk.push(p);
+                    chunkWords += words;
+
+                    if (chunkWords >= 80) {
+                        let clean = cleanText(currentChunk.join('\n\n'), compounds);
+                        if (clean) {
+                            let meta = {...globalMeta, block: `p_${chunkIdx++}`};
+                            ucis.push({meta, text: clean});
+                        }
+                        currentChunk = [];
+                        chunkWords = 0;
+                    }
+                });
+
+                if (currentChunk.length) {
+                    let clean = cleanText(currentChunk.join('\n\n'), compounds);
                     if (clean) {
-                        let meta = {...globalMeta, speaker: sanitizeVar(spkTag)};
+                        let meta = {...globalMeta, block: `p_${chunkIdx++}`};
                         ucis.push({meta, text: clean});
                     }
                 }
-            } else if (chosenSectionStrategy === 'heading') {
-                const parts = parsedData.split(/^#{1,4}\s+.+|^[A-Z\s]{5,}:/gm);
-                parts.forEach((p, idx) => {
-                    let clean = cleanText(p, compounds);
-                    if (clean) {
-                        let meta = {...globalMeta, section: `sec_${idx+1}`};
-                        ucis.push({meta, text: clean});
-                    }
-                });
+
             } else {
                 let clean = cleanText(parsedData, compounds);
                 if (clean) {
@@ -807,7 +1005,7 @@
         }
 
         if (!ucis.length) {
-            alert("No valid text sections could be extracted. Please check file formatting.");
+            alert("No valid text units could be generated. Please verify your document structure.");
             return;
         }
 
@@ -836,8 +1034,8 @@
         document.getElementById('metric-words').innerText = totalWords.toLocaleString();
         document.getElementById('metric-avg').innerText = (totalWords / ucis.length).toFixed(1);
 
-        document.getElementById('preview-text').innerText = ucis.slice(0, 2).map(u => 
-            "**** " + Object.entries(u.meta).map(([k, v]) => `*${k}_${v}`).join(" ") + "\n" + u.text.slice(0, 300) + "..."
+        document.getElementById('preview-text').innerText = ucis.slice(0, 3).map(u => 
+            "**** " + Object.entries(u.meta).map(([k, v]) => `*${k}_${v}`).join(" ") + "\n" + u.text.slice(0, 220) + "..."
         ).join("\n\n");
 
         const btnContainer = document.getElementById('download-buttons-container');

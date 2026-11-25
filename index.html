@@ -22,31 +22,34 @@
             --accent-badge-bg: #F4EBE8;
             --primary-btn: #18181B;
             --primary-btn-hover: #3F3F46;
+            --pill-active-bg: #18181B;
+            --pill-active-text: #FFFFFF;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
-            padding: 40px 20px;
+            padding: 30px 16px;
             display: flex;
             justify-content: center;
         }
 
         .container {
             width: 100%;
-            max-width: 720px;
+            max-width: 740px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .chic-badge {
@@ -59,11 +62,11 @@
             text-transform: uppercase;
             padding: 4px 12px;
             border-radius: 999px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .brand-title {
-            font-size: 2.4rem;
+            font-size: 2.3rem;
             font-weight: 700;
             letter-spacing: -0.03em;
             color: var(--text-main);
@@ -79,8 +82,8 @@
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 18px;
-            padding: 24px 28px;
-            margin-bottom: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
             transition: all 0.3s ease;
         }
@@ -104,7 +107,7 @@
         .dropzone {
             border: 2px dashed #E4E4E7;
             border-radius: 14px;
-            padding: 40px 20px;
+            padding: 36px 16px;
             text-align: center;
             cursor: pointer;
             transition: border-color 0.2s, background-color 0.2s;
@@ -123,6 +126,70 @@
 
         .dropzone input[type="file"] {
             display: none;
+        }
+
+        /* Smart Scan Result Box */
+        .scan-box {
+            background-color: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            font-size: 0.88rem;
+            color: #334155;
+        }
+
+        .scan-title {
+            font-weight: 600;
+            color: #0F172A;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #E2E8F0;
+            background: #FFFFFF;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .pill:hover {
+            border-color: #94A3B8;
+        }
+
+        .pill.active {
+            background: var(--pill-active-bg);
+            color: var(--pill-active-text);
+            border-color: var(--pill-active-bg);
+        }
+
+        .pill .count {
+            font-size: 0.72rem;
+            opacity: 0.75;
+            background: rgba(0,0,0,0.06);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        .pill.active .count {
+            background: rgba(255,255,255,0.25);
         }
 
         .form-group {
@@ -165,6 +232,7 @@
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
+            text-align: center;
         }
 
         .btn-primary:hover {
@@ -179,7 +247,7 @@
             border: 1px solid #F5EFEB;
             border-radius: 14px;
             padding: 16px 20px;
-            margin: 20px 0;
+            margin: 18px 0;
         }
 
         .metric-item {
@@ -202,7 +270,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         .meta-row {
@@ -244,9 +312,27 @@
             font-family: monospace;
             font-size: 0.82rem;
             white-space: pre-wrap;
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
             margin-top: 14px;
+        }
+
+        .preset-badge {
+            cursor: pointer;
+            border: 1px solid #CBD5E1;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            background: #FFFFFF;
+            display: block;
+            transition: all 0.15s;
+        }
+
+        .preset-badge:hover, .preset-badge.selected {
+            border-color: #0F172A;
+            background: #F8FAFC;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -256,7 +342,7 @@
     <header>
         <span class="chic-badge">100% In-Browser • Zero Cloud Uploads • Private</span>
         <h1 class="brand-title">IraPrep</h1>
-        <p class="brand-subtitle">Effortless, publication-ready corpus formatting for IRaMuTeQ.</p>
+        <p class="brand-subtitle">Smart, publication-ready corpus formatting for IRaMuTeQ.</p>
     </header>
 
     <!-- STEP 1: UPLOAD -->
@@ -265,40 +351,48 @@
         <div class="step-heading">Choose your document</div>
         <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-            <p id="file-name-display">Click to upload or drag & drop Word (.docx), Excel (.xlsx), CSV, or Text</p>
+            <p id="file-name-display">Click to upload Word (.docx), Excel (.xlsx), CSV, or Text</p>
             <input type="file" id="file-input" accept=".docx,.xlsx,.xls,.csv,.txt">
         </div>
     </div>
 
-    <!-- STEP 2: CONFIGURE (Hidden until file selected) -->
+    <!-- STEP 2: CONFIGURE -->
     <div class="step-card hidden" id="step-2">
         <div class="step-number">Step 02</div>
-        <div class="step-heading">Configure format & metadata</div>
+        <div class="step-heading">Smart Scan & Metadata Setup</div>
 
+        <!-- Scan Diagnostics Banner -->
+        <div class="scan-box" id="scan-summary-box">
+            <div class="scan-title">✨ Deep Document Inspection</div>
+            <div id="scan-summary-text">Analyzing file structure...</div>
+        </div>
+
+        <!-- SPREADSHEET CONTROLS -->
         <div id="spreadsheet-options" class="hidden">
             <div class="form-group">
-                <label for="text-column">Speech / Text Column:</label>
+                <label for="text-column">Speech / Narrative Column (to analyze):</label>
                 <select id="text-column"></select>
+                <div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">Tip: Pick full sentences or quotes for rich Reinert cluster results.</div>
             </div>
+
             <div class="form-group">
-                <label>Metadata Columns to include:</label>
-                <div id="meta-checkboxes" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                <label>Select Metadata Variables to Attach (<code>*var_val</code>):</label>
+                <div class="pill-grid" id="meta-pill-grid"></div>
+                <div style="font-size: 0.78rem; color: #64748B; margin-top: 6px;">Tap tags to include or exclude them as IRaMuTeQ illustrative variables.</div>
             </div>
         </div>
 
+        <!-- DOCUMENT & TRANSCRIPT CONTROLS -->
         <div id="document-options" class="hidden">
             <div class="form-group">
-                <label for="split-method">Section Separation:</label>
-                <select id="split-method">
-                    <option value="whole">Entire Document = 1 Section</option>
-                    <option value="speaker">By Speaker Turns (Participant:, Interviewer:)</option>
-                    <option value="paragraph">By Paragraphs / Blank Lines</option>
-                </select>
+                <label>Select Sectioning Strategy:</label>
+                <div id="section-strategy-presets"></div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Metadata Variables (<code>*name_value</code>):</label>
+        <!-- GLOBAL METADATA DYNAMIC BUILDER -->
+        <div class="form-group" style="margin-top: 20px;">
+            <label>Additional Variables (Global):</label>
             <div id="metadata-container">
                 <div class="meta-row">
                     <input type="text" placeholder="Key (e.g. date)" value="date" class="meta-key">
@@ -306,7 +400,7 @@
                     <button type="button" class="btn-icon" onclick="removeRow(this)">✕</button>
                 </div>
             </div>
-            <button type="button" class="btn-text" onclick="addMetadataRow()">+ Add Another Metadata Variable</button>
+            <button type="button" class="btn-text" onclick="addMetadataRow()">+ Add Another Variable</button>
         </div>
 
         <div class="form-group">
@@ -317,7 +411,7 @@
         <button class="btn-primary" onclick="generateCorpus()">Generate IRaMuTeQ Corpus ✨</button>
     </div>
 
-    <!-- STEP 3: EXPORT (Hidden until generated) -->
+    <!-- STEP 3: EXPORT -->
     <div class="step-card hidden" id="step-3">
         <div class="step-number">Step 03</div>
         <div class="step-heading">Ready for IRaMuTeQ</div>
@@ -339,7 +433,7 @@
 
         <div class="preview-box" id="preview-text"></div>
 
-        <div style="margin-top: 20px; display: flex; gap: 10px;" id="download-buttons-container">
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;" id="download-buttons-container">
             <button class="btn-primary" id="btn-download-all" onclick="downloadAll()">📥 Download corpus_iramuteq.txt</button>
         </div>
     </div>
@@ -350,6 +444,8 @@
     let fileType = null;
     let currentFileName = "";
     let finalCorpora = {};
+    let selectedMetaColumns = new Set();
+    let chosenSectionStrategy = "whole";
 
     function sanitizeVar(str) {
         if (!str) return "unknown";
@@ -360,19 +456,13 @@
     function cleanText(text, compounds) {
         if (!text) return "";
         let t = text.toString();
-        // remove urls
         t = t.replace(/https?:\/\/\S+/g, " ");
-        // strip parenthetical counts e.g. (1)
-        t = t.replace(/\s*\(\d+\)/g, "");
-        // symbols
+        t = t.replace(/\s*\(\d+\)/g, ""); // strip (1), (2)
         t = t.replace(/\b(\d+)\s*°\s*([cCfF])\b/g, "$1_degrees_$2");
         t = t.replace(/°/g, " degrees ").replace(/&/g, " and ").replace(/\$/g, " usd ");
-        // quotes
         t = t.replace(/[“”«»]/g, '"').replace(/[‘’`´]/g, "'");
-        // emojis & asterisks
         t = t.replace(/[\u{10000}-\u{10FFFF}]/gu, " ").replace(/[\u2600-\u27BF]/g, " ");
-        t = t.replace(/\*/g, "");
-        // compounds
+        t = t.replace(/\*/g, ""); // strip rogue asterisks
         if (compounds && compounds.length) {
             compounds.forEach(c => {
                 let parts = c.trim().split(/[\s\-_]+/);
@@ -382,7 +472,6 @@
                 }
             });
         }
-        // punctuation spacing
         t = t.replace(/([.,?!;:~])(?=[^\s\d])/g, "$1 ");
         t = t.replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n\n");
         return t.trim();
@@ -447,39 +536,136 @@
         document.getElementById('spreadsheet-options').classList.remove('hidden');
         document.getElementById('document-options').classList.add('hidden');
 
+        const rowCount = parsedData.length;
         const cols = Object.keys(parsedData[0] || {});
+
+        // Compute column stats for smart detection
+        let colStats = {};
+        cols.forEach(c => {
+            let uniqueVals = new Set();
+            let totalLen = 0;
+            let sampleRows = parsedData.slice(0, 150);
+            sampleRows.forEach(r => {
+                let v = r[c] ? r[c].toString().trim() : "";
+                if (v) uniqueVals.add(v);
+                totalLen += v.length;
+            });
+            colStats[c] = {
+                avgLen: totalLen / Math.max(sampleRows.length, 1),
+                uniqueCount: uniqueVals.size
+            };
+        });
+
+        // 1. Detect best text column (highest average length, prefer names like full_text, text, body)
+        let preferredCols = cols.filter(c => ["full_text", "text", "body", "speech", "transcript", "content"].includes(c.toLowerCase()));
+        let bestTextCol = preferredCols.length ? preferredCols[0] : cols.reduce((a, b) => colStats[a].avgLen > colStats[b].avgLen ? a : b);
+
         const select = document.getElementById('text-column');
         select.innerHTML = "";
-        
-        let bestCol = cols[0];
-        let maxLen = 0;
         cols.forEach(c => {
             const opt = document.createElement('option');
             opt.value = c;
-            opt.innerText = c;
+            opt.innerText = `${c} (avg ~${Math.round(colStats[c].avgLen)} chars)`;
+            if (c === bestTextCol) opt.selected = true;
             select.appendChild(opt);
-            let avgLen = parsedData.slice(0, 50).reduce((acc, row) => acc + (row[c] ? row[c].toString().length : 0), 0);
-            if (avgLen > maxLen) { maxLen = avgLen; bestCol = c; }
         });
-        select.value = bestCol;
 
-        const checkContainer = document.getElementById('meta-checkboxes');
-        checkContainer.innerHTML = "";
-        cols.filter(c => c !== bestCol).slice(0, 6).forEach(c => {
-            const lbl = document.createElement('label');
-            lbl.style.display = "inline-flex";
-            lbl.style.alignItems = "center";
-            lbl.style.gap = "4px";
-            lbl.style.fontWeight = "400";
-            lbl.innerHTML = `<input type="checkbox" name="meta-col" value="${c}" checked> ${c}`;
-            checkContainer.appendChild(lbl);
+        // 2. Scan metadata candidate columns (discrete categories)
+        selectedMetaColumns.clear();
+        const pillGrid = document.getElementById('meta-pill-grid');
+        pillGrid.innerHTML = "";
+
+        cols.filter(c => c !== bestTextCol).forEach(c => {
+            const pill = document.createElement('div');
+            const isGoodCandidate = colStats[c].uniqueCount <= 35 && colStats[c].avgLen < 40;
+            if (isGoodCandidate) selectedMetaColumns.add(c);
+
+            pill.className = `pill ${isGoodCandidate ? 'active' : ''}`;
+            pill.innerHTML = `<span>*${sanitizeVar(c)}</span> <span class="count">${colStats[c].uniqueCount} unique</span>`;
+            pill.onclick = () => {
+                if (selectedMetaColumns.has(c)) {
+                    selectedMetaColumns.delete(c);
+                    pill.classList.remove('active');
+                } else {
+                    selectedMetaColumns.add(c);
+                    pill.classList.add('active');
+                }
+            };
+            pillGrid.appendChild(pill);
         });
+
+        // Summary banner
+        document.getElementById('scan-summary-text').innerHTML = `
+            Detected <b>${rowCount.toLocaleString()} entries</b> across <b>${cols.length} columns</b>.<br>
+            • Text body set to: <b>${bestTextCol}</b><br>
+            • Auto-selected <b>${selectedMetaColumns.size} metadata variables</b> (categorical).
+        `;
     }
 
     function setupDocUI() {
         document.getElementById('step-2').classList.remove('hidden');
         document.getElementById('spreadsheet-options').classList.add('hidden');
         document.getElementById('document-options').classList.remove('hidden');
+
+        // Scan text for speaker turns, headings, and filename tokens
+        const speakerMatches = parsedData.match(/(?:Participant|Speaker|Interviewer|Person|[A-Z][a-z]+)\s*[0-9A-Za-z_-]*:/gi) || [];
+        const headingMatches = parsedData.match(/^#{1,4}\s+.+|^[A-Z\s]{4,}:/gm) || [];
+        const filenameTags = currentFileName.replace(/\.[^/.]+$/, "").split(/[\s\-_]+/).filter(Boolean);
+
+        const container = document.getElementById('section-strategy-presets');
+        container.innerHTML = "";
+
+        // Preset 1: Whole Doc
+        addPresetOption(container, "whole", `📄 Whole Document as 1 Section`, `Best if each file is one full interview or essay.`);
+
+        // Preset 2: Speaker Turns
+        if (speakerMatches.length > 2) {
+            addPresetOption(container, "speaker", `🗣️ Split by Speaker Turns (${speakerMatches.length} detected)`, `Splits on tags like '${speakerMatches[0]}'. Each turn becomes its own UCI.`);
+            chosenSectionStrategy = "speaker";
+        }
+
+        // Preset 3: Headings / Blank lines
+        if (headingMatches.length > 2) {
+            addPresetOption(container, "heading", `🔖 Split by Section Headings (${headingMatches.length} detected)`, `Splits on structural titles or chapter divisions.`);
+            if (speakerMatches.length <= 2) chosenSectionStrategy = "heading";
+        }
+
+        addPresetOption(container, "paragraph", `¶ Split by Double Blank Lines / Paragraphs`, `Useful for unstructured notes or free-flowing text.`);
+
+        // Summary text
+        let summaryHtml = `Analyzed <b>${currentFileName}</b> (~${parsedData.split(/\s+/).length.toLocaleString()} words).<br>`;
+        if (filenameTags.length > 1) {
+            summaryHtml += `• Auto-extracted filename tags: <code>${filenameTags.map(t => '*' + sanitizeVar(t)).join(' ')}</code><br>`;
+            // Pre-populate global metadata with filename tags
+            const metaContainer = document.getElementById('metadata-container');
+            metaContainer.innerHTML = "";
+            filenameTags.forEach((t, i) => {
+                const div = document.createElement('div');
+                div.className = "meta-row";
+                div.innerHTML = `
+                    <input type="text" value="tag_${i+1}" class="meta-key">
+                    <input type="text" value="${sanitizeVar(t)}" class="meta-val">
+                    <button type="button" class="btn-icon" onclick="removeRow(this)">✕</button>
+                `;
+                metaContainer.appendChild(div);
+            });
+        }
+        if (speakerMatches.length > 2) {
+            summaryHtml += `• Found <b>${speakerMatches.length} speaker turns</b> for dialogue analysis.`;
+        }
+        document.getElementById('scan-summary-text').innerHTML = summaryHtml;
+    }
+
+    function addPresetOption(container, val, title, desc) {
+        const div = document.createElement('div');
+        div.className = `preset-badge ${chosenSectionStrategy === val ? 'selected' : ''}`;
+        div.innerHTML = `<div><b>${title}</b></div><div style="font-size:0.75rem; color:#64748B;">${desc}</div>`;
+        div.onclick = () => {
+            chosenSectionStrategy = val;
+            container.querySelectorAll('.preset-badge').forEach(b => b.classList.remove('selected'));
+            div.classList.add('selected');
+        };
+        container.appendChild(div);
     }
 
     function addMetadataRow() {
@@ -510,7 +696,7 @@
 
         if (fileType === 'spreadsheet') {
             const textCol = document.getElementById('text-column').value;
-            const chosenMeta = Array.from(document.querySelectorAll('input[name="meta-col"]:checked')).map(cb => cb.value);
+            const chosenMeta = Array.from(selectedMetaColumns);
 
             parsedData.forEach(row => {
                 let clean = cleanText(row[textCol], compounds);
@@ -522,17 +708,21 @@
                 ucis.push({meta, text: clean});
             });
         } else {
-            const method = document.getElementById('split-method').value;
             let sections = [];
-            if (method === 'whole') {
-                sections = [{tag: "main", body: parsedData}];
-            } else if (method === 'speaker') {
-                const parts = parsedData.split(/(?:Participant|Speaker|Interviewer|Person)\s*[A-Za-z0-9_-]*:/i);
+            if (chosenSectionStrategy === 'whole') {
+                sections = [{tag: "doc", body: parsedData}];
+            } else if (chosenSectionStrategy === 'speaker') {
+                const parts = parsedData.split(/(?:Participant|Speaker|Interviewer|Person|[A-Z][a-z]+)\s*[0-9A-Za-z_-]*:/i);
                 parts.forEach((p, idx) => {
-                    if (p.trim()) sections.push({tag: `spk_${idx}`, body: p});
+                    if (p.trim()) sections.push({tag: `turn_${idx}`, body: p});
+                });
+            } else if (chosenSectionStrategy === 'heading') {
+                const parts = parsedData.split(/^#{1,4}\s+.+|^[A-Z\s]{4,}:/gm);
+                parts.forEach((p, idx) => {
+                    if (p.trim()) sections.push({tag: `sec_${idx}`, body: p});
                 });
             } else {
-                sections = parsedData.split(/\n\s*\n+/).map((p, idx) => ({tag: `sec_${idx+1}`, body: p}));
+                sections = parsedData.split(/\n\s*\n+/).map((p, idx) => ({tag: `para_${idx+1}`, body: p}));
             }
 
             sections.forEach(sec => {
@@ -549,7 +739,6 @@
             return;
         }
 
-        // Format into IRaMuTeQ blocks
         let fullCorpus = "";
         let totalWords = 0;
         let langGroups = {};
@@ -561,9 +750,8 @@
             let wCount = u.text.split(/\s+/).length;
             totalWords += wCount;
 
-            // Check language
-            let lang = Object.entries(u.meta).find(([k]) => k.includes("lang"));
-            let langKey = lang ? lang[1] : "all";
+            let langEntry = Object.entries(u.meta).find(([k]) => k.includes("lang"));
+            let langKey = langEntry ? langEntry[1] : "all";
             if (!langGroups[langKey]) langGroups[langKey] = "";
             langGroups[langKey] += block;
         });
@@ -571,7 +759,6 @@
         finalCorpora['all'] = fullCorpus;
         Object.keys(langGroups).forEach(k => { finalCorpora[k] = langGroups[k]; });
 
-        // Update UI
         document.getElementById('step-3').classList.remove('hidden');
         document.getElementById('metric-units').innerText = ucis.length.toLocaleString();
         document.getElementById('metric-words').innerText = totalWords.toLocaleString();
@@ -583,18 +770,19 @@
 
         const btnContainer = document.getElementById('download-buttons-container');
         btnContainer.innerHTML = "";
-        
+
         if (Object.keys(langGroups).length > 1 && !langGroups['all']) {
             const btnAll = document.createElement('button');
             btnAll.className = "btn-primary";
-            btnAll.innerText = `💾 All (${ucis.length})`;
+            btnAll.innerText = `💾 Download All (${ucis.length} units)`;
             btnAll.onclick = () => downloadFile(finalCorpora['all'], "corpus_iramuteq_all.txt");
             btnContainer.appendChild(btnAll);
 
             Object.keys(langGroups).forEach(lang => {
                 const btn = document.createElement('button');
                 btn.className = "btn-primary";
-                btn.innerText = `📥 ${lang.toUpperCase()} Corpus`;
+                btn.style.backgroundColor = "#27272A";
+                btn.innerText = `📥 Download ${lang.toUpperCase()} Corpus`;
                 btn.onclick = () => downloadFile(finalCorpora[lang], `corpus_${lang}.txt`);
                 btnContainer.appendChild(btn);
             });
@@ -605,6 +793,8 @@
             btn.onclick = () => downloadFile(finalCorpora['all'], "corpus_iramuteq.txt");
             btnContainer.appendChild(btn);
         }
+
+        document.getElementById('step-3').scrollIntoView({behavior: "smooth"});
     }
 
     function downloadFile(content, filename) {

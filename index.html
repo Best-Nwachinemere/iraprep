@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IraPrep — Universal IRaMuTeQ Corpus Studio</title>
+    <title>IraPrep — Universal IRaMuTeQ Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -171,6 +171,17 @@
             color: #2D3748;
             font-size: 0.78rem;
             font-weight: 500;
+        }
+
+        .info-callout {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            color: #1E40AF;
+            font-size: 0.82rem;
+            line-height: 1.45;
         }
 
         .pill-grid {
@@ -389,7 +400,7 @@
     <header>
         <span class="chic-badge">100% Client-Side • Zero Cloud Storage • Private</span>
         <h1 class="brand-title">IraPrep</h1>
-        <p class="brand-subtitle">Universal, publication-ready corpus formatting for IRaMuTeQ. Built for interviews, academic papers, reports, focus groups, and tabular data.</p>
+        <p class="brand-subtitle">Universal, publication-ready corpus formatting for IRaMuTeQ. Built for qualitative interviews, academic papers, reports, focus groups, and tabular data.</p>
     </header>
 
     <!-- STEP 1: UPLOAD -->
@@ -412,6 +423,9 @@
             <div class="scan-title">✨ Document Intelligence Analysis</div>
             <div id="scan-summary-text">Analyzing file structure...</div>
             <div class="tags-cluster" id="detected-tags-container"></div>
+            <div class="info-callout">
+                💡 <b>No numbering required:</b> IraPrep automatically detects section breaks from headings, speaker dialogue turns, divider lines (<code>---</code>), or your own custom marker.
+            </div>
         </div>
 
         <!-- SPREADSHEET CONTROLS -->
@@ -434,6 +448,13 @@
             <div class="form-group">
                 <label>Choose how to section this document into IRaMuTeQ units (UCIs):</label>
                 <div id="section-strategy-presets"></div>
+            </div>
+
+            <!-- CUSTOM DELIMITER INPUT -->
+            <div id="custom-delimiter-container" class="form-group hidden" style="margin-top: 14px; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 14px; border-radius: 12px;">
+                <label for="custom-delimiter-input">Custom Section Delimiter / Marker:</label>
+                <input type="text" id="custom-delimiter-input" placeholder="e.g. ---, ###, [POST], Author:, ENTRY" value="---" oninput="updateCustomDelimiterCount()">
+                <div id="custom-delimiter-count" style="font-size: 0.78rem; color: #64748B; margin-top: 5px;">Type any symbol or word used to separate units in your document.</div>
             </div>
         </div>
 
@@ -499,16 +520,23 @@
     let detectedSpeakers = [];
     let detectedDividersCount = 0;
 
-    // Academic & Report Section Heading Regex (e.g. Abstract, 1. Introduction, 2. Dataset, 3. Methodology, 4. Findings...)
-    const academicSectionRegex = /^(?:(?:[0-9]+(?:\.[0-9]+)*\b\s*[\.\-]?\s*)|(?:Abstract|Introduction|Methodology|Methods|Dataset|Data\s*and\s*Methods|Findings|Results|Discussion|Conclusion|Limitations|References|Bibliography|Appendix)\b)/i;
+    // Academic & Report Section Headings (Supports Numbered AND Unnumbered Headings in English, French, Spanish, plus Markdown)
+    const academicSectionRegex = /^(?:(?:[0-9]+(?:\.[0-9]+)*\b\s*[\.\-]?\s*)|(?:Abstract|R[eé]sum[eé]|Resumen|Introduction|Introducci[oó]n|Background|Context|Literature\s*Review|Revue\s*de\s*la\s*litt[eé]rature|Theoretical\s*Framework|Cadre\s*th[eé]orique|Methodology|Methods|M[eé]thodologie|Metodolog[ií]a|Dataset|Data|Donn[eé]es|Findings|Results|R[eé]sultats|Resultados|Discussion|Discusi[oó]n|Conclusion|Conclusiones|Limitations|Recommendations|References|R[eé]f[eé]rences|Bibliograph[yi]e|Appendix|Annexe|Anexos|Executive\s*Summary|Case\s*Study)\b|^#{1,4}\s+)/i;
 
-    // Dialogue Speaker Turns Regex (e.g. Interviewer:, Participant 1:, Speaker A:, P1:, INT:, RES:, Q:, A:)
+    // Dialogue Speaker Turns Regex (Supports Numbered AND Unnumbered Speakers: Interviewer:, Participant:, P1:, Doctor:, Patient:, etc.)
     const speakerTurnRegex = /(?:^|\n)[ \t]*(?:\*\*|\[)?(?!Score|Author|Date|Category|Discussion|Word\s*Count|Student\s*ID|Instructor|Course|Overview|Post\s*Body|Figure|Table|Box|Note)(Interviewer|Interviewee|Moderator|Participant(?:\s*\d+)?|Speaker(?:\s*\d+)?|Person(?:\s*\d+)?|P\d+|INT|RES|PART|Q|A|[A-Z][a-zA-Z0-9\s]{1,18})(?:\*\*|\])?\s*[:\-]/i;
+
+    // Posts & Dividers Regex (Supports Numbered AND Unnumbered Posts: ---, ===, ___, ***, —————, Author:, User:, Post:, Comment:)
+    const postDividerRegex = /(?:^[—–\-]{3,}|^={3,}|^\*{3,}|^_{3,}|^(?:Post|Thread|Entry|Comment)\s*(?:\d+)?\s*:|^(?=Author:\s*)|^(?=User:\s*))/gmi;
 
     function sanitizeVar(str) {
         if (!str) return "unknown";
         return str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
             .toLowerCase().replace(/[^a-z0-9_]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "").slice(0, 32) || "unknown";
+    }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     function cleanText(text, compounds) {
@@ -660,7 +688,7 @@
         });
 
         document.getElementById('scan-summary-text').innerHTML = `
-            Analyzed tabular dataset <b>${currentFileName}</b>: <b>${rowCount.toLocaleString()} records</b> across <b>${cols.length} variables</b>.<br>
+            Analyzed tabular dataset <b>${currentFileName}</b>: <b>${rowCount.toLocaleString()} unnumbered records</b> across <b>${cols.length} variables</b>.<br>
             • Free-text discourse body set to: <b>${bestTextCol}</b><br>
             • Pre-selected <b>${selectedMetaColumns.size} illustrative variables</b> for cross-tabulation in IRaMuTeQ.
         `;
@@ -675,7 +703,7 @@
         const paragraphs = parsedData.split(/\n+/).map(p => p.trim()).filter(Boolean);
         const totalWords = parsedData.split(/\s+/).length;
 
-        // 1. Scan for Academic / Report Headings
+        // 1. Scan for Academic / Report Headings (Numbered or Unnumbered)
         detectedAcademicSections = [];
         paragraphs.forEach((p, idx) => {
             let firstLine = p.split('\n')[0].trim();
@@ -684,7 +712,7 @@
             }
         });
 
-        // 2. Scan for Dialogue Speaker Turns
+        // 2. Scan for Dialogue Speaker Turns (Numbered or Unnumbered)
         const speakerCounts = {};
         const globalSpeakerRegex = new RegExp(speakerTurnRegex.source, 'gmi');
         let match;
@@ -695,8 +723,8 @@
         detectedSpeakers = Object.entries(speakerCounts);
         let totalSpeakerTurns = detectedSpeakers.reduce((acc, curr) => acc + curr[1], 0);
 
-        // 3. Scan for Forum / Thread Dividers
-        const dividerMatches = parsedData.match(/^[—–\-]{5,}|={5,}|\*{5,}|Post\s+\d+\s*:/gm) || [];
+        // 3. Scan for Forum / Thread Dividers & Post Headers (Numbered or Unnumbered)
+        const dividerMatches = parsedData.match(postDividerRegex) || [];
         detectedDividersCount = dividerMatches.length;
 
         // Build Presets List
@@ -708,8 +736,8 @@
         addPresetOption(
             container,
             "academic",
-            `📚 Academic Paper / Report Sections (${detectedAcademicSections.length} sections detected)`,
-            `Splits cleanly by chapter/section headings (Abstract, Introduction, Dataset, Methodology, Findings, Conclusion, etc.).`,
+            `📚 Academic Sections (Numbered or Unnumbered)`,
+            `Detected ${detectedAcademicSections.length} sections (e.g. Abstract, Introduction, Methodology, Findings, Discussion, Conclusion).`,
             isAcademicStrong
         );
 
@@ -718,8 +746,8 @@
         addPresetOption(
             container,
             "speaker",
-            `🗣️ Interview Dialogue Turns (${totalSpeakerTurns} turns across ${detectedSpeakers.length} speakers)`,
-            `Extracts each dialogue exchange as an individual UCI (e.g. *speaker_interviewer, *speaker_participant_1).`,
+            `🗣️ Dialogue Speaker Turns (Unnumbered)`,
+            `Detected ${totalSpeakerTurns} dialogue turns across ${detectedSpeakers.length} speakers (e.g. Interviewer, Participant, Doctor, Patient).`,
             isSpeakerStrong
         );
 
@@ -729,18 +757,18 @@
                 container,
                 "qa_pairs",
                 `💬 Q&A Exchanges (Interviewer + Participant Pairs)`,
-                `Groups each interview question together with the answer into a unified, rich communicative unit.`,
+                `Groups each question together with its answer into an individual substantive UCI.`,
                 false
             );
         }
 
-        // Strategy D: Forum / Reading Deck Threads
+        // Strategy D: Forum / Reading Deck Threads (Unnumbered Dividers)
         let isThreadStrong = detectedDividersCount >= 3 && !isAcademicStrong;
         addPresetOption(
             container,
             "threads",
-            `🧵 Discussion Threads & Posts (~${detectedDividersCount} threads detected)`,
-            `Keeps each complete conversation thread together (Post + Discussion) and auto-extracts inline metadata (*author, *score, *date).`,
+            `🧵 Posts & Threads (Dividers or Headers)`,
+            `Detected ~${detectedDividersCount} units separated by lines (---, ===, —————) or headers (Author:, User:, Post:).`,
             isThreadStrong
         );
 
@@ -749,11 +777,20 @@
             container,
             "paragraphs",
             `¶ Thematic Paragraphs (~${Math.min(paragraphs.length, 120)} units)`,
-            `Splits by natural paragraph breaks. Ideal for qualitative field notes, open essays, or continuous reflective prose.`,
+            `Splits continuous prose by paragraph breaks. Ideal when there are no markers or headings at all.`,
             false
         );
 
-        // Strategy F: Entire Document as 1 Unit
+        // Strategy F: Custom Delimiter
+        addPresetOption(
+            container,
+            "custom",
+            `⚙️ Custom Delimiter / Marker`,
+            `Split by your own custom symbol, tag, or word (e.g. ---, ###, [POST], Entry:, Scenario:).`,
+            false
+        );
+
+        // Strategy G: Entire Document as 1 Unit
         addPresetOption(
             container,
             "whole",
@@ -779,15 +816,15 @@
         tagsContainer.innerHTML = "";
 
         if (detectedAcademicSections.length >= 3) {
-            summaryHtml += `• Recognized structured <b>Academic Report / Paper</b> layout with <b>${detectedAcademicSections.length} section headings</b>.<br>`;
+            summaryHtml += `• Recognized <b>Academic Report / Paper</b> structure with <b>${detectedAcademicSections.length} section headings</b> (numbered or unnumbered).<br>`;
             tagsContainer.innerHTML = detectedAcademicSections.slice(0, 10).map(s => `<span class="tag-pill">§ ${s.title.slice(0, 24)}</span>`).join('');
             if (detectedAcademicSections.length > 10) tagsContainer.innerHTML += `<span class="tag-pill">+${detectedAcademicSections.length - 10} more</span>`;
         } else if (totalSpeakerTurns >= 3) {
             summaryHtml += `• Recognized <b>Interview / Dialogue Transcript</b> with <b>${totalSpeakerTurns} dialogue turns</b> across <b>${detectedSpeakers.length} speakers</b>.<br>`;
             tagsContainer.innerHTML = detectedSpeakers.map(([spk, count]) => `<span class="tag-pill">🗣️ ${spk} (${count})</span>`).join('');
         } else if (detectedDividersCount >= 3) {
-            summaryHtml += `• Found <b>${detectedDividersCount} thread dividers</b>. Smart sectioning will preserve posts and discussion together.<br>`;
-            tagsContainer.innerHTML = `<span class="tag-pill">Thread Dividers: ${detectedDividersCount}</span><span class="tag-pill">Metadata Parser: Active</span>`;
+            summaryHtml += `• Found <b>${detectedDividersCount} post/thread separators</b> (e.g. divider lines, author/user tags).<br>`;
+            tagsContainer.innerHTML = `<span class="tag-pill">Separators: ${detectedDividersCount}</span><span class="tag-pill">Inline Metadata: Active</span>`;
         } else {
             summaryHtml += `• Continuous qualitative text detected with <b>${paragraphs.length} paragraphs</b>.<br>`;
             tagsContainer.innerHTML = `<span class="tag-pill">${paragraphs.length} Paragraphs</span><span class="tag-pill">Ready for Paragraph Splitting</span>`;
@@ -810,8 +847,29 @@
             chosenSectionStrategy = val;
             container.querySelectorAll('.preset-badge').forEach(b => b.classList.remove('selected'));
             div.classList.add('selected');
+
+            const customContainer = document.getElementById('custom-delimiter-container');
+            if (val === 'custom') {
+                customContainer.classList.remove('hidden');
+                updateCustomDelimiterCount();
+            } else {
+                customContainer.classList.add('hidden');
+            }
         };
         container.appendChild(div);
+    }
+
+    function updateCustomDelimiterCount() {
+        const delim = document.getElementById('custom-delimiter-input').value.trim();
+        if (!delim || !parsedData) return;
+        try {
+            const regex = new RegExp(escapeRegex(delim), 'gmi');
+            const matches = parsedData.match(regex);
+            const count = matches ? matches.length + 1 : 1;
+            document.getElementById('custom-delimiter-count').innerText = `✨ Found ~${count} units matching "${delim}".`;
+        } catch(e) {
+            document.getElementById('custom-delimiter-count').innerText = `✨ Custom delimiter ready.`;
+        }
     }
 
     function addMetadataRow() {
@@ -875,7 +933,7 @@
                         }
                         curTitle = firstLine.slice(0, 32);
                         let rest = p.split('\n').slice(1).join('\n').trim();
-                        if (rest) curBody.append ? curBody.append(rest) : curBody.push(rest);
+                        if (rest) curBody.push(rest);
                     } else {
                         curBody.push(p);
                     }
@@ -929,7 +987,8 @@
                 }
 
             } else if (chosenSectionStrategy === 'threads') {
-                const rawBlocks = parsedData.split(/(?:^[—–\-]{5,}|^={5,}|^\*{5,}|^Post\s+\d+\s*:)/gm);
+                // Split by dividers (---, ===, ___, ***, —————) or unnumbered headers (Author:, User:, Post:)
+                const rawBlocks = parsedData.split(postDividerRegex);
                 
                 rawBlocks.forEach((block, idx) => {
                     let b = block.trim();
@@ -961,8 +1020,22 @@
                     let threadText = contentLines.join('\n');
                     let clean = cleanText(threadText, compounds);
                     if (clean && clean.split(/\s+/).length >= 5) {
-                        threadMeta['thread_id'] = `t_${idx}`;
+                        threadMeta['post_id'] = `p_${idx}`;
                         ucis.push({meta: threadMeta, text: clean});
+                    }
+                });
+
+            } else if (chosenSectionStrategy === 'custom') {
+                let delim = document.getElementById('custom-delimiter-input').value.trim();
+                if (!delim) delim = "---";
+                const customRegex = new RegExp(escapeRegex(delim), 'gmi');
+                const rawBlocks = parsedData.split(customRegex);
+
+                rawBlocks.forEach((block, idx) => {
+                    let clean = cleanText(block, compounds);
+                    if (clean && clean.split(/\s+/).length >= 5) {
+                        let meta = {...globalMeta, unit: `u_${idx + 1}`};
+                        ucis.push({meta, text: clean});
                     }
                 });
 
@@ -1005,7 +1078,7 @@
         }
 
         if (!ucis.length) {
-            alert("No valid text units could be generated. Please verify your document structure.");
+            alert("No valid text units could be generated. Please verify your document structure or delimiter.");
             return;
         }
 

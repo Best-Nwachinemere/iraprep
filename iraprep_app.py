@@ -1,5 +1,5 @@
 """
-IraPrep — The Sophisticated IRaMuTeQ Studio
+IraPrep — Universal IRaMuTeQ Studio
 Minimalist, elegant, step-by-step corpus compiler.
 Zero cloud leakage. 100% Private. Fully self-contained.
 """

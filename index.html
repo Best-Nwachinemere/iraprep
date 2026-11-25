@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IraPrep — The Sophisticated IRaMuTeQ Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SheetJS for Excel/CSV, Mammoth for Docx -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+    <style>
+        :root {
+            --bg: #FAFAF9;
+            --card-bg: #FFFFFF;
+            --border: #F0EEEC;
+            --text-main: #18181B;
+            --text-sub: #71717A;
+            --text-muted: #A1A1AA;
+            --accent-badge: #8C4A51;
+            --accent-badge-bg: #F4EBE8;
+            --primary-btn: #18181B;
+            --primary-btn-hover: #3F3F46;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .chic-badge {
+            display: inline-block;
+            background: var(--accent-badge-bg);
+            color: var(--accent-badge);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+
+        .brand-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .brand-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .step-number {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .step-heading {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .dropzone {
+            border: 2px dashed #E4E4E7;
+            border-radius: 14px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .dropzone:hover, .dropzone.dragover {
+            border-color: var(--text-main);
+            background-color: #F8FAFC;
+        }
+
+        .dropzone p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-top: 8px;
+        }
+
+        .dropzone input[type="file"] {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            border: 1px solid #E4E4E7;
+            border-radius: 10px;
+            font-family: inherit;
+            color: var(--text-main);
+            background: #FFFFFF;
+            outline: none;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: var(--text-main);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background-color: var(--primary-btn);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-btn-hover);
+            transform: translateY(-1px);
+        }
+
+        .metric-container {
+            display: flex;
+            justify-content: space-between;
+            background: #FDFBFB;
+            border: 1px solid #F5EFEB;
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+
+        .metric-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .metric-val {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .metric-lbl {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .meta-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .btn-icon:hover {
+            color: #EF4444;
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 6px 0;
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        .preview-box {
+            background: #F4F4F5;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.82rem;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="chic-badge">100% In-Browser • Zero Cloud Uploads • Private</span>
+        <h1 class="brand-title">IraPrep</h1>
+        <p class="brand-subtitle">Effortless, publication-ready corpus formatting for IRaMuTeQ.</p>
+    </header>
+
+    <!-- STEP 1: UPLOAD -->
+    <div class="step-card">
+        <div class="step-number">Step 01</div>
+        <div class="step-heading">Choose your document</div>
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <p id="file-name-display">Click to upload or drag & drop Word (.docx), Excel (.xlsx), CSV, or Text</p>
+            <input type="file" id="file-input" accept=".docx,.xlsx,.xls,.csv,.txt">
+        </div>
+    </div>
+
+    <!-- STEP 2: CONFIGURE (Hidden until file selected) -->
+    <div class="step-card hidden" id="step-2">
+        <div class="step-number">Step 02</div>
+        <div class="step-heading">Configure format & metadata</div>
+
+        <div id="spreadsheet-options" class="hidden">
+            <div class="form-group">
+                <label for="text-column">Speech / Text Column:</label>
+                <select id="text-column"></select>
+            </div>
+            <div class="form-group">
+                <label>Metadata Columns to include:</label>
+                <div id="meta-checkboxes" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+            </div>
+        </div>
+
+        <div id="document-options" class="hidden">
+            <div class="form-group">
+                <label for="split-method">Section Separation:</label>
+                <select id="split-method">
+                    <option value="whole">Entire Document = 1 Section</option>
+                    <option value="speaker">By Speaker Turns (Participant:, Interviewer:)</option>
+                    <option value="paragraph">By Paragraphs / Blank Lines</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Metadata Variables (<code>*name_value</code>):</label>
+            <div id="metadata-container">
+                <div class="meta-row">
+                    <input type="text" placeholder="Key (e.g. date)" value="date" class="meta-key">
+                    <input type="text" placeholder="Value (e.g. 2024_11)" value="2024_11" class="meta-val">
+                    <button type="button" class="btn-icon" onclick="removeRow(this)">✕</button>
+                </div>
+            </div>
+            <button type="button" class="btn-text" onclick="addMetadataRow()">+ Add Another Metadata Variable</button>
+        </div>
+
+        <div class="form-group">
+            <label for="compounds">Compound Words to bind with <code>_</code> (comma-separated):</label>
+            <input type="text" id="compounds" value="mental health, harm reduction, climate finance, artificial intelligence">
+        </div>
+
+        <button class="btn-primary" onclick="generateCorpus()">Generate IRaMuTeQ Corpus ✨</button>
+    </div>
+
+    <!-- STEP 3: EXPORT (Hidden until generated) -->
+    <div class="step-card hidden" id="step-3">
+        <div class="step-number">Step 03</div>
+        <div class="step-heading">Ready for IRaMuTeQ</div>
+
+        <div class="metric-container">
+            <div class="metric-item">
+                <div class="metric-val" id="metric-units">0</div>
+                <div class="metric-lbl">Total Units</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-val" id="metric-words">0</div>
+                <div class="metric-lbl">Total Words</div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-val" id="metric-avg">0</div>
+                <div class="metric-lbl">Avg Words / Unit</div>
+            </div>
+        </div>
+
+        <div class="preview-box" id="preview-text"></div>
+
+        <div style="margin-top: 20px; display: flex; gap: 10px;" id="download-buttons-container">
+            <button class="btn-primary" id="btn-download-all" onclick="downloadAll()">📥 Download corpus_iramuteq.txt</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let parsedData = null;
+    let fileType = null;
+    let currentFileName = "";
+    let finalCorpora = {};
+
+    function sanitizeVar(str) {
+        if (!str) return "unknown";
+        return str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase().replace(/[^a-z0-9_]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "") || "unknown";
+    }
+
+    function cleanText(text, compounds) {
+        if (!text) return "";
+        let t = text.toString();
+        // remove urls
+        t = t.replace(/https?:\/\/\S+/g, " ");
+        // strip parenthetical counts e.g. (1)
+        t = t.replace(/\s*\(\d+\)/g, "");
+        // symbols
+        t = t.replace(/\b(\d+)\s*°\s*([cCfF])\b/g, "$1_degrees_$2");
+        t = t.replace(/°/g, " degrees ").replace(/&/g, " and ").replace(/\$/g, " usd ");
+        // quotes
+        t = t.replace(/[“”«»]/g, '"').replace(/[‘’`´]/g, "'");
+        // emojis & asterisks
+        t = t.replace(/[\u{10000}-\u{10FFFF}]/gu, " ").replace(/[\u2600-\u27BF]/g, " ");
+        t = t.replace(/\*/g, "");
+        // compounds
+        if (compounds && compounds.length) {
+            compounds.forEach(c => {
+                let parts = c.trim().split(/[\s\-_]+/);
+                if (parts.length >= 2) {
+                    let re = new RegExp("\\b" + parts.join("[\\s\\-_]+") + "\\b", "gi");
+                    t = t.replace(re, parts.join("_").toLowerCase());
+                }
+            });
+        }
+        // punctuation spacing
+        t = t.replace(/([.,?!;:~])(?=[^\s\d])/g, "$1 ");
+        t = t.replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n\n");
+        return t.trim();
+    }
+
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+
+    fileInput.addEventListener('change', handleFile);
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            handleFile();
+        }
+    });
+
+    function handleFile() {
+        const file = fileInput.files[0];
+        if (!file) return;
+        currentFileName = file.name;
+        document.getElementById('file-name-display').innerText = `Selected: ${file.name}`;
+        const ext = file.name.split('.').pop().toLowerCase();
+
+        if (['xlsx', 'xls', 'csv'].includes(ext)) {
+            fileType = 'spreadsheet';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                parsedData = XLSX.utils.sheet_to_json(sheet, {defval: ""});
+                setupSpreadsheetUI();
+            };
+            reader.readAsArrayBuffer(file);
+        } else if (ext === 'docx') {
+            fileType = 'docx';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                mammoth.extractRawText({arrayBuffer: e.target.result}).then(res => {
+                    parsedData = res.value;
+                    setupDocUI();
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            fileType = 'text';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parsedData = e.target.result;
+                setupDocUI();
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    function setupSpreadsheetUI() {
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('spreadsheet-options').classList.remove('hidden');
+        document.getElementById('document-options').classList.add('hidden');
+
+        const cols = Object.keys(parsedData[0] || {});
+        const select = document.getElementById('text-column');
+        select.innerHTML = "";
+        
+        let bestCol = cols[0];
+        let maxLen = 0;
+        cols.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.innerText = c;
+            select.appendChild(opt);
+            let avgLen = parsedData.slice(0, 50).reduce((acc, row) => acc + (row[c] ? row[c].toString().length : 0), 0);
+            if (avgLen > maxLen) { maxLen = avgLen; bestCol = c; }
+        });
+        select.value = bestCol;
+
+        const checkContainer = document.getElementById('meta-checkboxes');
+        checkContainer.innerHTML = "";
+        cols.filter(c => c !== bestCol).slice(0, 6).forEach(c => {
+            const lbl = document.createElement('label');
+            lbl.style.display = "inline-flex";
+            lbl.style.alignItems = "center";
+            lbl.style.gap = "4px";
+            lbl.style.fontWeight = "400";
+            lbl.innerHTML = `<input type="checkbox" name="meta-col" value="${c}" checked> ${c}`;
+            checkContainer.appendChild(lbl);
+        });
+    }
+
+    function setupDocUI() {
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('spreadsheet-options').classList.add('hidden');
+        document.getElementById('document-options').classList.remove('hidden');
+    }
+
+    function addMetadataRow() {
+        const div = document.createElement('div');
+        div.className = "meta-row";
+        div.innerHTML = `
+            <input type="text" placeholder="Key" class="meta-key">
+            <input type="text" placeholder="Value" class="meta-val">
+            <button type="button" class="btn-icon" onclick="removeRow(this)">✕</button>
+        `;
+        document.getElementById('metadata-container').appendChild(div);
+    }
+
+    function removeRow(btn) {
+        btn.parentElement.remove();
+    }
+
+    function generateCorpus() {
+        const compounds = document.getElementById('compounds').value.split(',').map(s => s.trim()).filter(Boolean);
+        const globalMeta = {};
+        document.querySelectorAll('.meta-row').forEach(row => {
+            const k = row.querySelector('.meta-key').value.trim();
+            const v = row.querySelector('.meta-val').value.trim();
+            if (k) globalMeta[sanitizeVar(k)] = sanitizeVar(v);
+        });
+
+        let ucis = [];
+
+        if (fileType === 'spreadsheet') {
+            const textCol = document.getElementById('text-column').value;
+            const chosenMeta = Array.from(document.querySelectorAll('input[name="meta-col"]:checked')).map(cb => cb.value);
+
+            parsedData.forEach(row => {
+                let clean = cleanText(row[textCol], compounds);
+                if (!clean) return;
+                let meta = {...globalMeta};
+                chosenMeta.forEach(col => {
+                    meta[sanitizeVar(col)] = sanitizeVar(row[col]);
+                });
+                ucis.push({meta, text: clean});
+            });
+        } else {
+            const method = document.getElementById('split-method').value;
+            let sections = [];
+            if (method === 'whole') {
+                sections = [{tag: "main", body: parsedData}];
+            } else if (method === 'speaker') {
+                const parts = parsedData.split(/(?:Participant|Speaker|Interviewer|Person)\s*[A-Za-z0-9_-]*:/i);
+                parts.forEach((p, idx) => {
+                    if (p.trim()) sections.push({tag: `spk_${idx}`, body: p});
+                });
+            } else {
+                sections = parsedData.split(/\n\s*\n+/).map((p, idx) => ({tag: `sec_${idx+1}`, body: p}));
+            }
+
+            sections.forEach(sec => {
+                let clean = cleanText(sec.body, compounds);
+                if (clean) {
+                    let meta = {...globalMeta, section: sanitizeVar(sec.tag)};
+                    ucis.push({meta, text: clean});
+                }
+            });
+        }
+
+        if (!ucis.length) {
+            alert("No text could be extracted.");
+            return;
+        }
+
+        // Format into IRaMuTeQ blocks
+        let fullCorpus = "";
+        let totalWords = 0;
+        let langGroups = {};
+
+        ucis.forEach(u => {
+            let header = "**** " + Object.entries(u.meta).map(([k, v]) => `*${k}_${v}`).join(" ");
+            let block = `${header}\n${u.text}\n\n`;
+            fullCorpus += block;
+            let wCount = u.text.split(/\s+/).length;
+            totalWords += wCount;
+
+            // Check language
+            let lang = Object.entries(u.meta).find(([k]) => k.includes("lang"));
+            let langKey = lang ? lang[1] : "all";
+            if (!langGroups[langKey]) langGroups[langKey] = "";
+            langGroups[langKey] += block;
+        });
+
+        finalCorpora['all'] = fullCorpus;
+        Object.keys(langGroups).forEach(k => { finalCorpora[k] = langGroups[k]; });
+
+        // Update UI
+        document.getElementById('step-3').classList.remove('hidden');
+        document.getElementById('metric-units').innerText = ucis.length.toLocaleString();
+        document.getElementById('metric-words').innerText = totalWords.toLocaleString();
+        document.getElementById('metric-avg').innerText = (totalWords / ucis.length).toFixed(1);
+
+        document.getElementById('preview-text').innerText = ucis.slice(0, 2).map(u => 
+            "**** " + Object.entries(u.meta).map(([k, v]) => `*${k}_${v}`).join(" ") + "\n" + u.text
+        ).join("\n\n");
+
+        const btnContainer = document.getElementById('download-buttons-container');
+        btnContainer.innerHTML = "";
+        
+        if (Object.keys(langGroups).length > 1 && !langGroups['all']) {
+            const btnAll = document.createElement('button');
+            btnAll.className = "btn-primary";
+            btnAll.innerText = `💾 All (${ucis.length})`;
+            btnAll.onclick = () => downloadFile(finalCorpora['all'], "corpus_iramuteq_all.txt");
+            btnContainer.appendChild(btnAll);
+
+            Object.keys(langGroups).forEach(lang => {
+                const btn = document.createElement('button');
+                btn.className = "btn-primary";
+                btn.innerText = `📥 ${lang.toUpperCase()} Corpus`;
+                btn.onclick = () => downloadFile(finalCorpora[lang], `corpus_${lang}.txt`);
+                btnContainer.appendChild(btn);
+            });
+        } else {
+            const btn = document.createElement('button');
+            btn.className = "btn-primary";
+            btn.innerText = "📥 Download corpus_iramuteq.txt";
+            btn.onclick = () => downloadFile(finalCorpora['all'], "corpus_iramuteq.txt");
+            btnContainer.appendChild(btn);
+        }
+    }
+
+    function downloadFile(content, filename) {
+        const blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>
